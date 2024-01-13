@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Jurusan::class);
             $table->string('kelas');
             $table->string('abjat');
-            $table->string('tidak_masuk', 600);
+            $table->string('tidak_masuk', 600)->default('Masuk Semua');
             $table->timestamps();
         });
     }
