@@ -36,6 +36,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::view('siswa', 'Admin.Siswa.index');
     Route::view('jurusan', 'Admin.Jurusan.index');
     Route::view('absen', 'Admin.Absen.index');
+    Route::view('admin-panel', 'Admin.index-admin');
 });
 
 Route::middleware(['auth', 'teach'])->prefix('teacher')->group(function() {
