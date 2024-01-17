@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\AbsenController;
+use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\View\UserController as ViewUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +30,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+Route::middleware(['auth', 'admin'])->prefix('api/admin')->group(function() {
+    Route::apiResource('/user', UserController::class);
+    Route::apiResource('/jurusan', JurusanController::class);
+    Route::apiResource('/siswa', SiswaController::class);
+    Route::apiResource('/absen', AbsenController::class);
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -32,7 +45,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
-    Route::view('user', 'Admin.User.index');
+    Route::resource('user-data', ViewUserController::class);
     Route::view('siswa', 'Admin.Siswa.index');
     Route::view('jurusan', 'Admin.Jurusan.index');
     Route::view('absen', 'Admin.Absen.index');

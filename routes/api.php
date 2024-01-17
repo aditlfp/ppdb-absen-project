@@ -6,6 +6,7 @@ use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,12 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
-    Route::apiResource('/user', UserController::class);
-    Route::apiResource('/jurusan', JurusanController::class);
-    Route::apiResource('/siswa', SiswaController::class);
-    Route::apiResource('/absen', AbsenController::class);
-});
+
 
 Route::middleware(['auth', 'teach'])->prefix('teacher')->group(function() {
     Route::apiResource('/ppdb-siswa', SiswaController::class);
