@@ -41,7 +41,6 @@
  <script>
      $(document).ready(function(){
          fetchdata()
-         fetchApi()
 
 
          $('#close').on('click', function() {
@@ -56,24 +55,6 @@
          })
      })
 
-     function fetchApi()
-     {
-        $.ajax({
-            url: 'https://kalenderindonesia.com/api/login',
-            type: 'GET',
-            success: function(response)
-            {
-                $.ajax({
-                    url: `https://kalenderindonesia.com/api/${response.key}/kalender/masehi/2024/1`,
-                    type: 'GET',
-                    success: function(res)
-                    {
-                        console.log(res);
-                    }
-                })
-            }
-        })
-     }
 
      function fetchdata() {
          $('#load').show()

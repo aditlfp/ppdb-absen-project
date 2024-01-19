@@ -32,6 +32,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+Route::get('/menu', function () {
+    return view('menu');
+})->middleware(['auth', 'verified'])->name('menu');
+
 // Route API
 
 Route::middleware(['auth', 'admin'])->prefix('api/admin')->group(function() {
@@ -45,6 +50,8 @@ Route::middleware(['auth', 'admin'])->prefix('api/admin')->group(function() {
 Route::middleware(['auth', 'teach'])->prefix('api/teacher')->group(function() {
     Route::apiResource('/ppdb-siswa', SiswaController::class);
     Route::apiResource('/absensi', AbsenController::class);
+    Route::apiResource('/data-jurusan', JurusanController::class);
+
 });
 
 
@@ -63,7 +70,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::resource('siswa-data', ViewSiswaController::class);
     Route::resource('jurusan-data', ViewJurusanController::class);
     Route::view('absen', 'Admin.Absen.index');
-    Route::view('admin-panel', 'Admin.index-admin');
+    Route::view('admin-panel', 'Admin.index-admin')->name('admin-panel');
 });
 
 Route::middleware(['auth', 'teach'])->prefix('teacher')->group(function() {
