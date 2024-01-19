@@ -40,11 +40,16 @@ class UserController extends Controller
         }
     }
 
-    public function update(UserRequest $request, $id)
+    public function update(Request $request, $id)
     {
         try {
             $user = User::findOrFail($id);
-            $data = $request->validated();
+            $data = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password ? $request->password : $user->password,
+                'role_id' => $request->role_id
+            ];
             $user->update($data);
             return new UserResource($user);
         } catch (\Exception $e) {

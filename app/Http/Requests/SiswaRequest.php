@@ -29,6 +29,7 @@ class SiswaRequest extends FormRequest
             'rw' => 'nullable|max:10',
             'kelurahan' => 'nullable|max:255',
             'kecamatan' => 'nullable|max:255',
+            'kota' => 'nullable|max:255',
             'nama_ortu' => 'nullable|max:255',
             'no_tlp_ortu' => 'nullable|max:20',
         ];

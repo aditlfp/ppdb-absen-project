@@ -18,7 +18,7 @@
     },
     "dependencies": {
         "datatables.net-dt": "^1.13.8",
-        "remixicon": "^4.0.1",
+        "remixicon": "^4.1.0",
         "simplebar": "^6.2.5",
         "toastr": "^2.1.4"
     }

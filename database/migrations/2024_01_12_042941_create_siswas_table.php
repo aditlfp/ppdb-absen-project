@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('rw')->nullable();
             $table->string('kelurahan')->nullable();
             $table->string('kecamatan')->nullable();
+            $table->string('kota')->nullable();
             $table->string('nama_ortu')->nullable();
             $table->string('no_tlp_ortu')->nullable();
             $table->timestamps();

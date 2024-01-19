@@ -23,6 +23,7 @@ class SiswaResource extends JsonResource
             'rw' => $this->rw,
             'kelurahan' => $this->kelurahan,
             'kecamatan' => $this->kecamatan,
+            'kota' => $this->kota,
             'nama_ortu' => $this->nama_ortu,
             'no_tlp_ortu' => $this->no_tlp_ortu,
             'created_at' => $this->created_at,

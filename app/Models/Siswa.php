@@ -17,6 +17,7 @@ class Siswa extends Model
         'rw',
         'kelurahan',
         'kecamatan',
+        'kota',
         'nama_ortu',
         'no_tlp_ortu'
     ];

@@ -31,27 +31,40 @@
 
 <script>
     $('#load').show()
-    function getData(response)
-    {
-        const name = $('#name').val(response.data.name);
-        const email = $('#email').val(response.data.email);
-        const role_id = $('#role_id').val(response.data.role_id);
-        const password = $('#password').val(response.data.password);
-        const password_confirmation = $('#password_confirmation').val(response.data.password);
-        $('#load').hide()
+        function getData(response) {
+        // Populate form fields with user data
+        $('#name').val(response.data.name);
+        $('#email').val(response.data.email);
+        $('#role_id').val(response.data.role_id);
+        $('#password').val(response.data.password);
+        $('#password_confirmation').val(response.data.password);
 
-        $('#btnSave').on('click', function () {
+        // Hide the loading indicator
+        $('#load').hide();
+
+        // Attach click event handler to the Save button
+        $('#btnSave2').on('click', function () {
+            // Get updated values from form fields
+            const name = $('#name').val();
+            const email = $('#email').val();
+            const role_id = $('#role_id').val();
+            const password = $('#password').val();
+            const password_confirmation = $('#password_confirmation').val();
+
+            // Make an AJAX request to update user data
             $.ajax({
-                url: '{{ route('user.store') }}',
-                method: 'POST',
+                url: `/api/admin/user/${response.data.id}`,
+                method: 'PATCH',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data: { name, email, role_id, password, password_confirmation },
                 success: function () {
-                    // After creating a new user, fetch updated data
+                    // After updating user data, fetch updated data
                     fetchdata();
-                    toastr.success('Data Has Been Saved !', 'success')
+                    toastr.success('Data Has Been Saved!', 'success');
+
+                    // Reset form fields
                     $('#name').val('');
                     $('#email').val('');
                     $('#role_id').val('0');
@@ -59,7 +72,8 @@
                     $('#password_confirmation').val('');
                 },
                 error: function (error) {
-                    console.error('Error adding person:', error);
+                    console.error('Error updating user data:', error);
+                    toastr.error('Failed to update data!', 'error');
                 }
             });
         });

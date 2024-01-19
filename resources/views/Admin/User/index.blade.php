@@ -97,8 +97,8 @@
                                 <td>${ymdString}</td>
                                 <td>
                                     <div class="flex gap-x-3">
-                                        <button onclick="deleteUser(${user.id})" class="btn btn-xs bg-red-500">Delete</button>     
-                                        <button onclick="editUser(${user.id})" class="btn btn-xs bg-amber-500">Edit</button>
+                                        <button onclick="editUser(${user.id})" class="btn btn-xs bg-amber-500"><i class="ri-pencil-fill"></i></button>
+                                        <button onclick="deleteUser(${user.id})" class="btn btn-xs bg-red-500"><i class="ri-close-line"></i></button>     
                                     </div>
                                 </td>
                             </tr>
@@ -160,7 +160,7 @@
                             $(document).ready(function() {
                                 getData(response)
                             })
-                            $('#modalBody').html(res + '<div class="flex justify-center"><button id="btnSave" type="button" class="btn bg-sky-500 w-full">Save</button></div>')
+                            $('#modalBody').html(res + '<div class="flex justify-center"><button id="btnSave2" type="button" class="btn bg-sky-500 w-full">Save</button></div>')
                             $('#modal').show()
                         }
                    })

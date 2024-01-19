@@ -3,15 +3,15 @@
         <span>Create New User</span>
     </div>
     <div class="flex flex-col m-5">
-        <label for="name" class="text-sm font-semibold">Name :</label>
+        <label for="name" class="text-sm font-semibold required">Name :</label>
         <input type="text" id="name" name="name" placeholder="Masukkan Nama" class="input input-bordered input-sm input-warning w-full max-w-xs" />
     </div>
     <div class="flex flex-col m-5">
-        <label for="email" class="text-sm font-semibold">Email :</label>
+        <label for="email" class="text-sm font-semibold required">Email :</label>
         <input type="email" id="email" name="email" placeholder="example@gmail.com" class="input input-bordered input-sm input-warning w-full max-w-xs" />
     </div>
     <div class="flex flex-col m-5">
-        <label for="role_id" class="text-sm font-semibold">Permission :</label>
+        <label for="role_id" class="text-sm font-semibold required">Permission :</label>
         <select id="role_id" name="role_id" class="select select-warning text-xs select-sm w-full max-w-xs">
             <option value="0" disabled selected>~Select Permission~</option>
             <option value="1">Guru ( Teacher )</option>
@@ -20,11 +20,11 @@
         </select>
     </div>
     <div class="flex flex-col m-5">
-        <label for="password" class="text-sm font-semibold">Password :</label>
+        <label for="password" class="text-sm font-semibold required">Password :</label>
         <input type="password" id="password" name="password" class="input input-bordered input-sm input-warning w-full max-w-xs" />
     </div>
     <div class="flex flex-col m-5">
-        <label for="password_confirmation" class="text-sm font-semibold">Retype Password :</label>
+        <label for="password_confirmation" class="text-sm font-semibold required">Retype Password :</label>
         <input type="password" id="password_confirmation" name="password_confirmation" class="input input-bordered input-sm input-warning w-full max-w-xs" />
     </div>
 </div>

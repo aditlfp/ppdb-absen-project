@@ -4,7 +4,9 @@ use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\View\SiswaController as ViewSiswaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\View\JurusanController as ViewJurusanController;
 use App\Http\Controllers\View\UserController as ViewUserController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +32,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Route API
 
 Route::middleware(['auth', 'admin'])->prefix('api/admin')->group(function() {
     Route::apiResource('/user', UserController::class);
@@ -38,24 +41,37 @@ Route::middleware(['auth', 'admin'])->prefix('api/admin')->group(function() {
     Route::apiResource('/absen', AbsenController::class);
 });
 
+
+Route::middleware(['auth', 'teach'])->prefix('api/teacher')->group(function() {
+    Route::apiResource('/ppdb-siswa', SiswaController::class);
+    Route::apiResource('/absensi', AbsenController::class);
+});
+
+
+// End Route API
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Route View Only
+
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::resource('user-data', ViewUserController::class);
-    Route::view('siswa', 'Admin.Siswa.index');
-    Route::view('jurusan', 'Admin.Jurusan.index');
+    Route::resource('siswa-data', ViewSiswaController::class);
+    Route::resource('jurusan-data', ViewJurusanController::class);
     Route::view('absen', 'Admin.Absen.index');
     Route::view('admin-panel', 'Admin.index-admin');
 });
 
 Route::middleware(['auth', 'teach'])->prefix('teacher')->group(function() {
-    Route::view('siswa-new', 'Teach.Siswa.index');
+    Route::resource('siswa-new', ViewUserController::class);
     Route::view('absensi-siswa', 'Teach.Absen.index');
 });
+
+// End Route
 
 Route::middleware(['auth'])->prefix('siswa')->group(function() {
     Route::view('data-absensi', 'Siswa.DataAbsen.index');

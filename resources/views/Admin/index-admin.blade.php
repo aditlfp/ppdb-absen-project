@@ -31,26 +31,19 @@
                         <li>
                             <button class="menu-btn" data-menu="menuA">Master Data</button>
                                 <ul id="menuA" style="display: none;">
-                                    <li id="subMenuA1" data-submenu="Aku Sub Menu A ke 1"><button>User Data</button></li>
-                                    <li id="subMenuA2" data-submenu="Aku Sub Menu A ke 2"><button>Submenu 2</button></li>
+                                    <li id="subMenuA1" data-submenu="Aku Sub Menu A ke 1" onclick="userIndex()" class="mt-1"><button>Data User</button></li>
+                                    <li id="subMenuA2" data-submenu="Aku Sub Menu A ke 2" onclick="siswaIndex()" class="my-1"><button>Data Siswa</button></li>
+                                    <li id="subMenuA3" data-submenu="Aku Sub Menu A ke 2" onclick="jurusanIndex()"><button>Data Jurusan</button></li>
                                 </ul>
                         </li>
                         {{-- menu B --}}
                         <li>
-                            <button class="menu-btn" data-menu="menuB">menu b</button>
+                            <button class="menu-btn" data-menu="menuB">Sub Data</button>
                                 <ul id="menuB" style="display: none;">
-                                    <li><a>Submenu 1</a></li>
-                                    <li><a>Submenu 2</a></li>
+                                    <li class="my-1"><button>Data Absen</button></li>
                                 </ul>
                         </li>
                         {{-- menu C --}}
-                        <li>
-                            <button class="menu-btn" data-menu="menuC">menu c</button>
-                                <ul id="menuC" style="display: none;">
-                                    <li><a>Submenu 1</a></li>
-                                    <li><a>Submenu 2</a></li>
-                                </ul>
-                        </li>
                         
                     </ul>
                     
@@ -73,21 +66,13 @@
                 var menuId = $(this).data('menu');
                 $('#' + menuId).slideToggle('fast');
             });
-            $('#subMenuA2, #menuDash').click(function() {
+            $('#menuDash').click(function() {
                 $('#menuContainer').text($(this).data('submenu'));
-                $('#subMenuA1').on('click', function(){
-                    userIndex()
-                });
-            })
-
-            $('#subMenuA1').click(function() {
-                userIndex()
             })
 
             $('#logout').click(function() {
                 logout();
             })
-           
         })
 
         function userIndex() 
@@ -98,9 +83,37 @@
                 success: function (response, data)
                 {
                     $('#def').hide()
-                    $('#menuContainer').append(response);
+                    $('#menuContainer').html(response);
                     $('#menuDash').removeClass('active');
-                    $('#subMenuA1').off('click').addClass('active');
+                    $('#subMenuA1').addClass('active');
+                }
+            })
+        }
+
+        function siswaIndex() {
+
+            $.ajax({
+                url: '/admin/siswa-data',
+                method: 'GET',
+                success: function (response) {
+                    $('#def').hide();
+                    $('#menuContainer').html(response);
+                    $('#menuDash').removeClass('active');
+                    $('#subMenuA2').addClass('active');
+                },
+            });
+        }
+
+        function jurusanIndex()
+        {
+            $.ajax({
+                url: '/admin/jurusan-data',
+                method: 'GET',
+                success: function(response) {
+                    $('#def').hide();
+                    $('#menuContainer').html(response);
+                    $('#menuDash').removeClass('active');
+                    $('#subMenuA3').addClass('active');
                 }
             })
         }
