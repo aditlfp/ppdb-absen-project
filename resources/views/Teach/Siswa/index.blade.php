@@ -5,15 +5,14 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <meta http-equiv="X-UA-Compatible" content="ie=edge">
  <meta name="csrf-token" content="{{ csrf_token() }}">
-@vite(['resources/css/app.css', 'resources/js/app.js'])
  <title>Document</title>
 </head>
 <body>
     <div class="w-full h-full overflow-auto" data-simplebar>
-     <div class="flex justify-end items-end w-full my-5">
+     <div class="flex justify-end items-end w-full my-5 mr-5">
          <button id="btnCreate" class="btn bg-amber-500  transition-all ease-in-out duration-150 w-fit">Create New</button>
      </div>
-     <table class="table table-xs table-zebra max-h-[50%]">
+     <table class="table table-xs table-zebra max-h-[50%]" data-simplebar>
          <thead>
              <tr>
                  <th>#</th>
@@ -50,14 +49,8 @@
 
 
          $('#close').on('click', function() {
-             $.ajax({
-             url: 'siswa-data/create',
-             type: 'GET',
-             success: function(response){
                  $('#btnCreate').show()
                  $('#modal').hide()
-             }
-             })
          })
      })
 
@@ -70,7 +63,6 @@
                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
              },
              success: function(response){
-                 console.log(response.data);
                  $('#load').hide()
                  if (response && Array.isArray(response.data)) {
                  // Clear existing content

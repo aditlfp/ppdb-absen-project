@@ -4,7 +4,7 @@
     "src": "node_modules/remixicon/fonts/remixicon.eot"
   },
   "node_modules/remixicon/fonts/remixicon.svg": {
-    "file": "assets/remixicon-7NKkMgfj.svg",
+    "file": "assets/remixicon-NAJX0vxc.svg",
     "src": "node_modules/remixicon/fonts/remixicon.svg"
   },
   "node_modules/remixicon/fonts/remixicon.ttf": {
@@ -20,7 +20,7 @@
     "src": "node_modules/remixicon/fonts/remixicon.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-nV7xcUe-.css",
+    "file": "assets/app-GTLmay-Y.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -30,12 +30,12 @@
       "assets/remixicon-LCZT1ya9.woff2",
       "assets/remixicon-C3JuO1s9.woff",
       "assets/remixicon-BFNNtX32.ttf",
-      "assets/remixicon-7NKkMgfj.svg"
+      "assets/remixicon-NAJX0vxc.svg"
     ],
     "css": [
-      "assets/app-v8nDVd6X.css"
+      "assets/app-p8l0R4L_.css"
     ],
-    "file": "assets/app-MDQ97gze.js",
+    "file": "assets/app-vvuVlkhC.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

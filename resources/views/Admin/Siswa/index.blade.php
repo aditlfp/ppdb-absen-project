@@ -48,14 +48,8 @@
 
 
          $('#close').on('click', function() {
-             $.ajax({
-             url: 'siswa-data/create',
-             type: 'GET',
-             success: function(response){
                  $('#btnCreate').show()
                  $('#modal').hide()
-             }
-             })
          })
      })
 
@@ -109,7 +103,7 @@
              console.error('Error fetching data:', error);
          }
      });
- }
+    }
 
      $('#btnCreate').on('click', function() {
          $.ajax({

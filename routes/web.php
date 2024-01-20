@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\View\SiswaController as ViewSiswaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\View\SiswaTeachController;
 use App\Http\Controllers\View\JurusanController as ViewJurusanController;
 use App\Http\Controllers\View\UserController as ViewUserController;
 use Illuminate\Support\Facades\Route;
@@ -74,7 +75,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
 });
 
 Route::middleware(['auth', 'teach'])->prefix('teacher')->group(function() {
-    Route::resource('siswa-new', ViewUserController::class);
+    Route::resource('siswa-new', SiswaTeachController::class);
     Route::view('absensi-siswa', 'Teach.Absen.index');
 });
 

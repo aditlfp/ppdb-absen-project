@@ -21,6 +21,7 @@ class TeacherMiddleware
             redirect()->to(url('/'));
             notify()->error('You Dont Have Previllage !');
             Auth::logout();
+            dd('ERROR ROLE');
         }
         return $next($request);
     }

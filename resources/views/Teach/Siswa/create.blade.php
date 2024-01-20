@@ -91,6 +91,7 @@
                 $('#no_tlp_ortu').val('');
             },
             error: function (error) {
+                toastr.error('Data Failed Saved !', 'error')
                 console.error('Error adding person:', error);
             }
         });

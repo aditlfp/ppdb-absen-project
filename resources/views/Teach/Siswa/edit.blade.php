@@ -86,11 +86,20 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                data: { name, email, role_id, password, password_confirmation },
+                data: { nama_lengkap,
+                    no_tlp,
+                    desa,
+                    rt,
+                    rw,
+                    kelurahan,
+                    kecamatan,
+                    kota,
+                    nama_ortu,
+                    no_tlp_ortu },
                 success: function () {
                     // After updating user data, fetch updated data
                     fetchdata();
-                    toastr.success('Data Has Been Saved!', 'success');
+                    toastr.success('Data Has Been Updated!', 'success');
 
                     // Reset form fields
                     $('#name').val('');

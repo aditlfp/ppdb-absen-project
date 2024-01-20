@@ -91,7 +91,6 @@
     		const kelas = $('#kelas').val();
     		const abjat = $('#abjat').val();
     		const tidak_masuk = $('#tidak_masuk').val();
-
 	        $.ajax({
 	            url: '{{ route('absensi.store') }}',
 	            method: 'POST',
@@ -108,6 +107,7 @@
 	                $('#tidak_masuk').val('');
 	            },
 	            error: function (error) {
+	            	toastr.error('Data Failed Saved !', 'error')
 	                console.error('Error adding data:', error);
 	            }
         });
