@@ -32,6 +32,9 @@ class SiswaRequest extends FormRequest
             'kota' => 'nullable|max:255',
             'nama_ortu' => 'nullable|max:255',
             'no_tlp_ortu' => 'nullable|max:20',
+            'jurusan_id' => 'required',
+            'abjat' => 'required',
+            'kelas' => 'required'
         ];
     }
 }

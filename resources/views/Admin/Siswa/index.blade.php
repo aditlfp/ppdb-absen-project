@@ -16,6 +16,7 @@
              <tr>
                  <th>#</th>
                  <th>Nama Lengkap</th>
+                 <th>Kelas - Jurusan</th>
                  <th>Tlp</th>
                  <th>Alamat Lengkap</th>
                  <th>Org Tua / Wali</th>
@@ -75,6 +76,7 @@
                              <tr>
                                  <td>${no++}</td>
                                  <td>${siswa.nama_lengkap}</td>
+                                 <td>${siswa.kelas?siswa.kelas:'-'}  ${siswa.jurusan?siswa.jurusan.name:'-'}-${siswa.abjat?siswa.abjat:'-'}</td>
                                  <td>${siswa.no_tlp}</td>
                                  <td>Des.${siswa.desa} / RT ${siswa.rt}/ RW ${siswa.rw}, Kel.${siswa.kelurahan}, Kec.${siswa.kecamatan}, Kota.${siswa.kota}</td>
                                  <td>${siswa.nama_ortu}</td>

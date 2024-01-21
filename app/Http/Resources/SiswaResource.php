@@ -28,6 +28,10 @@ class SiswaResource extends JsonResource
             'no_tlp_ortu' => $this->no_tlp_ortu,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'jurusan_id' => $this->jurusan_id,
+            'jurusan' => $this->jurusan,
+            'abjat' => $this->abjat,
+            'kelas' => $this->kelas
         ];
     }
 }

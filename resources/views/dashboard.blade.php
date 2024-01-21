@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="shadow-sm flex flex-col justify-content-center items-center w-full h-screen bg-slate-200">
+    <div class="shadow-sm flex flex-col justify-content-center items-center w-full bg-slate-200">
     	<div class="mt-20 mx-2">
     		<div class="font-semibold text-center text-lg">
     			Absensi Siswa SMK Pemkab Ponorogo
@@ -22,18 +22,19 @@
 		    </div>
 		    <div class="flex flex-col m-5">
 		        <label for="abjat" class="text-sm font-semibold required">Abjat :</label>
-		        <select id="abjat" name="abjat" class="select select-warning text-xs select-sm w-full max-w-xs">
+		        <select id="abjat" default-value="0" name="abjat" class="select select-warning text-xs select-sm w-full max-w-xs">
 		            <option value="0" disabled selected>~Pilih Abjat~</option>	
 		        </select>
 		    </div>
 		    <div class="flex flex-col m-5">
-		        <label for="tidak_masuk" class="text-sm font-semibold">Siswa Yang Tidak Masuk :</label>
-		        <textarea name="tidak_masuk" id="tidak_masuk" class="textarea textarea-warning" placeholder="Siswa Yang Tidak Masuk"></textarea>
+		       <label for="tidak_masuk" class="text-sm font-semibold">Tidak Masuk :</label>
+		       <div id='checkboxContainer' class="flex flex-row">
+		       	
+		       </div>
 		    </div>
 		    <div class="btn bg-sky-500 w-full" onclick="storeData()">
     			<button id="btnSave">Save</button>
     		</div>
-
     	</div>
     	    	
     </div>
@@ -44,6 +45,111 @@
     <script type="text/javascript">
     	fetchJurusan();
 		getAbjat();
+		fetchSiswa()
+
+		$(document).ready(function() {
+			  // Event listener for jurusan_id
+			  $('#jurusan_id').on('change', function() {
+			    var jurusanId = $(this).val();
+			    updateCheckboxVisibility(jurusanId);
+			  });
+
+			  // Event listener for kelas
+			  $('#kelas').on('change', function() {
+			    var jurusanId = $('#jurusan_id').val();
+			    var kelas = $(this).val();
+			    updateCheckboxVisibility(jurusanId, kelas);
+			  });
+
+			  // Event listener for abjat
+			  $('#abjat').on('change', function() {
+			    var jurusanId = $('#jurusan_id').val();
+			    var kelas = $('#kelas').val();
+			    var abjat = $(this).val();
+			    updateCheckboxVisibility(jurusanId, kelas, abjat);
+			  });
+			});
+
+
+			// Function to update checkbox visibility based on selected values
+				function updateCheckboxVisibility(jurusanId, kelas, abjat) {
+				  console.log('Selected Values:', jurusanId, kelas, abjat);
+
+				  $('.checkbox, .labels').each(function() {
+				    var optionJurusanId = $(this).data('jurusanData');
+				    var optionKelas = $(this).data('kelas');
+				    var optionAbjat = $(this).data('abjat') || ''; // Treat undefined as empty string
+
+				    console.log('Option Values:', optionJurusanId, optionKelas, optionAbjat);
+
+				    // Log the values of abjat and optionAbjat
+				    console.log('abjat:', abjat, 'optionAbjat:', optionAbjat);
+
+				    // Check if the option matches the selected values or if the selected value is empty
+				    var jurusanMatch = jurusanId === '' || jurusanId == optionJurusanId;
+				    var kelasMatch = kelas === '' || kelas == optionKelas;
+				    
+				    // Explicitly handle undefined case
+				    var abjatMatch = abjat === undefined ? optionAbjat === '' : String(abjat) == optionAbjat;
+
+				    console.log('Match Conditions:', jurusanMatch, kelasMatch, abjatMatch);
+
+				    // Menyembunyikan atau menampilkan checkbox berdasarkan kondisi
+				    if (jurusanMatch && kelasMatch && abjatMatch) {
+				      $(this).show();
+				    } else {
+				      $(this).hide();
+				    }
+				  });
+				}
+
+
+
+
+
+			// Fetch student data
+			function fetchSiswa() {
+			  $.ajax({
+			    url: '/api/teacher/ppdb-siswa',
+			    method: 'GET',
+			    headers: {
+			      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			    },
+			    success: function(res) {
+			      // Render data ke dalam checkbox
+			      var selectElement = $('#checkboxContainer');
+
+			      $.each(res.data, function(index, item) {
+			        var checkbox = $('<input>', {
+			          type: 'checkbox',
+			          id: item.id,
+			          name: 'tidak_masuk',
+			          class: 'checkbox mx-2',
+			          'data-jurusan-data': item.jurusan_id,
+			          'data-kelas': item.kelas,
+			          'data-abjat': item.abjat,
+			          value: item.nama_lengkap
+			        });
+
+			        var label = $('<label>', {
+			          for: item.id,
+			          class: 'mr-2 labels',
+			          'data-jurusan-data': item.jurusan_id,
+			          'data-kelas': item.kelas,
+			          'data-abjat': item.abjat,
+			          text: item.nama_lengkap
+			        });
+
+			        selectElement.append(checkbox, label);
+			      });
+
+			      // Secara default, setelah merender siswa, tampilkan semuanya
+			      $('.checkbox').show();
+			    }
+			  });
+			}
+
+
 
     	function fetchJurusan()
     	{
@@ -52,7 +158,7 @@
     			method: 'GET',
     			success: function(res)
     			{
-    				console.log(res.data[0])
+    				// console.log(res.data[0])
 				    // Dapatkan elemen select berdasarkan ID
 				    var selectElement = $('#jurusan_id');
 
@@ -85,33 +191,46 @@
     	}
 
     	
-    	function storeData()
-    	{
-    		const jurusan_id = $('#jurusan_id').val();
-    		const kelas = $('#kelas').val();
-    		const abjat = $('#abjat').val();
-    		const tidak_masuk = $('#tidak_masuk').val();
-	        $.ajax({
-	            url: '{{ route('absensi.store') }}',
-	            method: 'POST',
-	            headers: {
-	                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	            },
-	            data: { jurusan_id, kelas, abjat, tidak_masuk },
-	            success: function () {
-	                // After creating a new user, fetch updated data
-	                toastr.success('Data Has Been Saved !', 'success')
-	                $('#jurusan_id').val('');
-	                $('#kelas').val('');
-	                $('#abjat').val('');
-	                $('#tidak_masuk').val('');
-	            },
-	            error: function (error) {
-	            	toastr.error('Data Failed Saved !', 'error')
-	                console.error('Error adding data:', error);
-	            }
-        });
-    	}
+    	function storeData() {
+		  const jurusan_id = $('#jurusan_id').val();
+		  const kelas = $('#kelas').val();
+		  const abjat = $('#abjat').val();
+
+		  // Mendapatkan nilai dari checkbox yang dicentang sebagai array
+		  const tidak_masukArray = $('.checkbox:checked').map(function() {
+		    return $(this).val();
+		  }).get();
+
+		  // Mengonversi array ke dalam format JSON
+		  const tidak_masukJSON = JSON.stringify(tidak_masukArray);
+
+		  // Ajax request
+		  $.ajax({
+		    url: '{{ route('absensi.store') }}',
+		    method: 'POST',
+		    headers: {
+		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		    },
+		    data: { jurusan_id, kelas, abjat, tidak_masuk: tidak_masukJSON },
+		    success: function() {
+		      // Setelah membuat data baru, ambil data yang diperbarui
+		      toastr.success('Data Has Been Saved!', 'success')
+		      $('#jurusan_id').val('');
+		      $('#kelas').val('');
+		      $('#abjat').val('');
+
+		      // Reset nilai checkbox yang dicentang
+		      $('.checkbox:checked').prop('checked', false);
+		    },
+		    error: function(error) {
+		      toastr.error('Data Failed Saved!', 'error')
+		      console.error('Error adding data:', error);
+		    }
+		  });
+		}
+
+
+
 
 
     </script>

@@ -19,6 +19,14 @@ class Siswa extends Model
         'kecamatan',
         'kota',
         'nama_ortu',
-        'no_tlp_ortu'
+        'no_tlp_ortu',
+        'jurusan_id',
+        'abjat',
+        'kelas'
     ];
+
+    public function Jurusan()
+    {
+        return $this->belongsTo(Jurusan::class);
+    }
 }
