@@ -28,7 +28,7 @@
 		    </div>
 		    <div class="flex flex-col m-5">
 		       <label for="tidak_masuk" class="text-sm font-semibold">Tidak Masuk :</label>
-		       <div id='checkboxContainer' class="flex flex-row">
+		       <div id='checkboxContainer' class="flex flex-col gap-y-2">
 		       	
 		       </div>
 		    </div>
@@ -51,14 +51,17 @@
 			  // Event listener for jurusan_id
 			  $('#jurusan_id').on('change', function() {
 			    var jurusanId = $(this).val();
-			    updateCheckboxVisibility(jurusanId);
+				var kelas = $('#kelas').val();
+				var abjat = $('#abjat').val();
+			    updateCheckboxVisibility(jurusanId, kelas, abjat);
 			  });
 
 			  // Event listener for kelas
 			  $('#kelas').on('change', function() {
 			    var jurusanId = $('#jurusan_id').val();
 			    var kelas = $(this).val();
-			    updateCheckboxVisibility(jurusanId, kelas);
+				var abjat = $('#abjat').val()
+			    updateCheckboxVisibility(jurusanId, kelas, abjat);
 			  });
 
 			  // Event listener for abjat
@@ -73,17 +76,11 @@
 
 			// Function to update checkbox visibility based on selected values
 				function updateCheckboxVisibility(jurusanId, kelas, abjat) {
-				  console.log('Selected Values:', jurusanId, kelas, abjat);
 
-				  $('.checkbox, .labels').each(function() {
+				  $('.checkbox, .labels, .keterangan, .warp').each(function() {
 				    var optionJurusanId = $(this).data('jurusanData');
 				    var optionKelas = $(this).data('kelas');
 				    var optionAbjat = $(this).data('abjat') || ''; // Treat undefined as empty string
-
-				    console.log('Option Values:', optionJurusanId, optionKelas, optionAbjat);
-
-				    // Log the values of abjat and optionAbjat
-				    console.log('abjat:', abjat, 'optionAbjat:', optionAbjat);
 
 				    // Check if the option matches the selected values or if the selected value is empty
 				    var jurusanMatch = jurusanId === '' || jurusanId == optionJurusanId;
@@ -91,8 +88,6 @@
 				    
 				    // Explicitly handle undefined case
 				    var abjatMatch = abjat === undefined ? optionAbjat === '' : String(abjat) == optionAbjat;
-
-				    console.log('Match Conditions:', jurusanMatch, kelasMatch, abjatMatch);
 
 				    // Menyembunyikan atau menampilkan checkbox berdasarkan kondisi
 				    if (jurusanMatch && kelasMatch && abjatMatch) {
@@ -104,6 +99,63 @@
 				}
 
 
+				function renderCheckboxes(item) {
+					var no = 1;
+					var divWrapper = $('<div>', { 
+						class: 'flex flex-row warp',
+						'data-jurusan-data': item.jurusan_id,
+						'data-kelas': item.kelas,
+						'data-abjat': item.abjat, });
+
+					// Create checkbox with unique ID
+					var checkbox = $('<input>', {
+						type: 'checkbox',
+						id: `checkbox_${item.id}_${no}`,
+						name: 'tidak_masuk',
+						class: 'checkbox mx-2',
+						'data-jurusan-data': item.jurusan_id,
+						'data-kelas': item.kelas,
+						'data-abjat': item.abjat,
+						value: item.nama_lengkap
+					});
+
+					// Create label with unique 'for' attribute
+					var label = $('<label>', {
+						for: `checkbox_${item.id}_${no}`,
+						class: 'mr-2 labels',
+						'data-jurusan-data': item.jurusan_id,
+						'data-kelas': item.kelas,
+						'data-abjat': item.abjat,
+						text: item.nama_lengkap
+					});
+
+					// Create a group of checkboxes for 'S,' 'I,' 'A'
+					var keteranganGroup = $('<div>', { class: 'flex flex-row items-center gap-x-2' });
+
+					// Iterate over ['S', 'I', 'A'] to create individual checkboxes
+					['S', 'I', 'A'].forEach((option) => {
+						var keteranganCheckbox = $('<input>', {
+							type: 'checkbox',
+							id: `keterangan_${item.id}_${no}_${option}`,
+							name: `keterangan_${item.id}_${no}`,
+							class: 'keterangan-checkbox',
+							value: option
+						});
+
+						var keteranganLabel = $('<label>', {
+							for: `keterangan_${item.id}_${no}_${option}`,
+							text: option
+						});
+
+						// Append each keterangan checkbox and label to the group
+						keteranganGroup.append(keteranganCheckbox, keteranganLabel);
+					});
+
+					// Append checkbox, label, and keteranganGroup to the div wrapper
+					divWrapper.append(checkbox, label, keteranganGroup);
+
+					return divWrapper;
+				}
 
 
 
@@ -120,31 +172,8 @@
 			      var selectElement = $('#checkboxContainer');
 
 			      $.each(res.data, function(index, item) {
-			        var checkbox = $('<input>', {
-			          type: 'checkbox',
-			          id: item.id,
-			          name: 'tidak_masuk',
-			          class: 'checkbox mx-2',
-			          'data-jurusan-data': item.jurusan_id,
-			          'data-kelas': item.kelas,
-			          'data-abjat': item.abjat,
-			          value: item.nama_lengkap
-			        });
-
-			        var label = $('<label>', {
-			          for: item.id,
-			          class: 'mr-2 labels',
-			          'data-jurusan-data': item.jurusan_id,
-			          'data-kelas': item.kelas,
-			          'data-abjat': item.abjat,
-			          text: item.nama_lengkap
-			        });
-
-			        selectElement.append(checkbox, label);
+					selectElement.append(renderCheckboxes(item));
 			      });
-
-			      // Secara default, setelah merender siswa, tampilkan semuanya
-			      $('.checkbox').show();
 			    }
 			  });
 			}
@@ -196,13 +225,27 @@
 		  const kelas = $('#kelas').val();
 		  const abjat = $('#abjat').val();
 
-		  // Mendapatkan nilai dari checkbox yang dicentang sebagai array
-		  const tidak_masukArray = $('.checkbox:checked').map(function() {
-		    return $(this).val();
-		  }).get();
+		  // Initialize an array to store the selected data
+		  var selectedData = [];
+		  $('.checkbox:checked').each(function(index, checkbox) {
+				var id = $(checkbox).attr('id').replace(/^checkbox_/, '');
+				var nama = $(checkbox).val();
 
+				// Retrieve keterangan by finding checked checkboxes within the corresponding group
+				var keterangan = $(`input[name="keterangan_${id}"]:checked`).map(function() {
+					return $(this).val();
+				}).get().join(', ');
+
+				var data = {
+					id: id,
+					nama: nama,
+					keterangan: keterangan
+				};
+
+				selectedData.push(data);
+			});
 		  // Mengonversi array ke dalam format JSON
-		  const tidak_masukJSON = JSON.stringify(tidak_masukArray);
+		  const tidak_masukJSON = JSON.stringify(selectedData);
 
 		  // Ajax request
 		  $.ajax({

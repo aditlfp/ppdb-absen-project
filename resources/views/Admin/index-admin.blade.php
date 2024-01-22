@@ -129,7 +129,7 @@
                 success: function() {
                     toastr.info('Success Logout');
                     setTimeout(function() {
-                        location.reload(true);
+                        window.location.href('login');
                     }, 2000);
                 }
             })
