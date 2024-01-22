@@ -39,8 +39,8 @@
                         {{-- menu B --}}
                         <li>
                             <button class="menu-btn" data-menu="menuB">Sub Data</button>
-                                <ul id="menuB" style="display: none;">
-                                    <li class="my-1"><button>Data Absen</button></li>
+                                <ul id="menuB" style="display: none;" onclick="absenIndex()">
+                                    <li class="my-1" id="submenuB"><button>Data Absen</button></li>
                                 </ul>
                         </li>
                         {{-- menu C --}}
@@ -114,6 +114,21 @@
                     $('#menuContainer').html(response);
                     $('#menuDash').removeClass('active');
                     $('#subMenuA3').addClass('active');
+                }
+            })
+        }
+
+        function absenIndex()
+        {
+            $.ajax({
+                url: '/admin/absen-data',
+                method: 'GET',
+                success: function(response)
+                {
+                    $('#def').hide();
+                    $('#menuContainer').html(response);
+                    $('#menuDash').removeClass('active');
+                    $('#submenuB').addClass('active');
                 }
             })
         }

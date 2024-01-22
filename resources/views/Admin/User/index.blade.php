@@ -27,8 +27,9 @@
             <tbody id="userList">
                 <!-- User data will be dynamically added here -->
             </tbody>
-        </table>    
-
+        </table>
+         <div class="join flex flex-row justify-center items-center m-2" id="paginationContainer"></div>    
+         <div id="content-container"></div>
             <div id="modal" style="display: none">
                 <div class="flex justify-end mt-5">
                     <button class="btn bg-red-500 mx-5" id="close">Close</button>
@@ -42,11 +43,12 @@
             <span id="load" class="loading loading-infinity loading-lg" style="display: none;"></span>
         </div>
     </div>
+
+
     
     <script>
         $(document).ready(function(){
             fetchdata()
-
 
             $('#close').on('click', function() {
                 $.ajax({
@@ -60,21 +62,60 @@
             })
         })
 
-        function fetchdata() {
+        function paginate(meta) {
+          const container = $('<div/>').addClass('join shadow-md');
+
+          const prev = meta.links[0].url;
+          const next = meta.links[meta.links.length - 1].url;
+          const current = meta.current_page;
+          console.log(prev, next, current)
+
+          if (prev) {
+            const prevLink = $('<a/>')
+              .attr('href', prev)
+              .addClass('join-item btn bg-blue-600 hover:bg-blue-800')
+              .text('«');
+
+            container.append(prevLink);
+          }
+
+          const currentButton = $('<button/>')
+            .addClass('join-item btn bg-blue-600 hover:bg-blue-800')
+            .text(current);
+
+          container.append(currentButton);
+
+          if (next) {
+            const nextLink = $('<a/>')
+              .attr('href', next)
+              .addClass('join-item btn bg-blue-600 hover:bg-blue-800')
+              .text('»');
+
+            container.append(nextLink);
+          }
+
+          // Append the container to your desired element in the DOM
+          $('#paginationContainer').empty().append(container);
+        }
+
+
+        function fetchdata(page = 1) {
             $('#load').show()
             $.ajax({
-                url: '/api/admin/user',
+                url: '/api/admin/user?page=' + page,
                 type: 'GET',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response){
-                    // console.log(response.data);
+                    console.log(response);
                     $('#load').hide()
                     if (response && Array.isArray(response.data)) {
                     // Clear existing content
                     $('#userList').empty();
                     var no = 1;
+                    //http://localhost:8001/api/admin/user?page=1
+                    paginate(response.meta)
                     // Iterate through the response and append rows to the table
                     response.data.forEach(function(user) {
 

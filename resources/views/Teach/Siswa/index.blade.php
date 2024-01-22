@@ -42,7 +42,7 @@
          <span id="load" class="loading loading-infinity loading-lg" style="display: none;"></span>
      </div>
  </div>
- 
+ <x-paginate />
  <script>
      $(document).ready(function(){
          fetchdata()

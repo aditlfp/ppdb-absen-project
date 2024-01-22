@@ -9,9 +9,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\View\SiswaTeachController;
 use App\Http\Controllers\View\JurusanController as ViewJurusanController;
 use App\Http\Controllers\View\UserController as ViewUserController;
+use App\Http\Controllers\View\AbsensiController as ViewAbsenController;
 use Illuminate\Support\Facades\Route;
 
-/*
+/*AbsensiController
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -70,7 +71,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::resource('user-data', ViewUserController::class);
     Route::resource('siswa-data', ViewSiswaController::class);
     Route::resource('jurusan-data', ViewJurusanController::class);
-    Route::view('absen', 'Admin.Absen.index');
+    Route::resource('absen-data', ViewAbsenController::class);
     Route::view('admin-panel', 'Admin.index-admin')->name('admin-panel');
 });
 
