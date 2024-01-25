@@ -32,7 +32,7 @@
 		       	
 		       </div>
 		    </div>
-		    <div class="btn bg-sky-500 w-full" onclick="storeData()">
+		    <div class="btn bg-sky-500 w-full" onclick="storeData()" id="save_data" style="display: none;">
     			<button id="btnSave">Save</button>
     		</div>
     	</div>
@@ -48,6 +48,10 @@
 		fetchSiswa()
 
 		$(document).ready(function() {
+
+			var created = {!! Auth::user()->create !!};
+			created == 1 ? $('#save_data').show() : $('#save_data').hide();
+
 			  // Event listener for jurusan_id
 			  $('#jurusan_id').on('change', function() {
 			    var jurusanId = $(this).val();
@@ -72,7 +76,6 @@
 			    updateCheckboxVisibility(jurusanId, kelas, abjat);
 			  });
 			});
-
 
 			// Function to update checkbox visibility based on selected values
 				function updateCheckboxVisibility(jurusanId, kelas, abjat) {

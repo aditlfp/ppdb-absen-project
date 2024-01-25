@@ -48,7 +48,8 @@
          <tbody id="userList">
              <!-- User data will be dynamically added here -->
          </tbody>
-     </table>    
+     </table>
+     <div class="join flex flex-row justify-center items-center m-2" id="pagination"></div>    
      <div class="flex justify-center items-center">
          <span id="load" class="loading loading-infinity loading-lg" style="display: none;"></span>
      </div>
@@ -102,6 +103,21 @@
         });
     }
 
+     function paginate(meta)
+    {
+        var current = meta.current_page
+        var totalPages = meta.last_page;
+        $('#pagination').empty();
+
+
+        for (var i = 1; i <= totalPages; i++) {
+            i != current ? $('#pagination').append(`<button class="join-item btn" onclick="fetchdata(${i})">${i}</button>`) : $('#pagination').append(`<button class="join-item btn" disabled onclick="fetchdata(${i})">${i}</button>`)
+        }
+
+       
+        current != totalPages ? $('#pagination').append(`<button class="join-item btn" onclick="fetchdata(${totalPages})">Last</button>`) : ""
+    }
+
     function fetchdata() {
         $('#load').show();
 
@@ -117,6 +133,7 @@
                 if (response && Array.isArray(response.data)) {
                     $('#userList').empty();
                     var no = 1;
+                    paginate(response.meta)
 
                     if (response.data.length != 0) {
                         response.data.forEach(function (siswa) {

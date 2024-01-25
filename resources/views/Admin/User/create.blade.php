@@ -19,6 +19,21 @@
             <option value="2">Admin</option> <!-- Corrected value for Admin -->
         </select>
     </div>
+  <div class="flex flex-col m-5" style="display: none;" id="userPermission">
+    <label for="role_id" class="text-sm font-semibold">User Permission :</label>
+       <div class="form-control flex flex-col gap-y-2">
+
+          <div class="flex flex-row items-center gap-x-5">
+            <input type="checkbox" value="1" id="created" class="checkbox checkbox-warning" />
+            <span class="label-text">Save Data</span>
+          </div>
+
+          <div class="flex flex-row items-center gap-x-5">
+            <input type="checkbox" value="1" id="deleted" class="checkbox checkbox-warning" />
+            <span class="label-text">Delete Data</span>
+          </div>
+        </div>
+    </div>
     <div class="flex flex-col m-5">
         <label for="password" class="text-sm font-semibold required">Password :</label>
         <input type="password" id="password" name="password" class="input input-bordered input-sm input-warning w-full max-w-xs" />
@@ -30,12 +45,20 @@
 </div>
 
 <script>
+
+    $('#role_id').on('change', function(){
+        $(this).val() == 1 ? $('#userPermission').show() : $('#userPermission').hide()
+    })
+    
+
      $('#btnSave').on('click', function () {
         const name = $('#name').val();
         const email = $('#email').val();
         const role_id = $('#role_id').val();
         const password = $('#password').val();
         const password_confirmation = $('#password_confirmation').val();
+        const create = $('#created').val();
+        const deleted = $('#deleted').val();
 
         $.ajax({
             url: '{{ route('user.store') }}',
@@ -43,7 +66,7 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            data: { name, email, role_id, password, password_confirmation },
+            data: { name, email, role_id, password, password_confirmation, created, delete: deleted },
             success: function () {
                 // After creating a new user, fetch updated data
                 fetchdata();
@@ -53,6 +76,8 @@
                 $('#role_id').val('0');
                 $('#password').val('');
                 $('#password_confirmation').val('');
+                $('#created').attr('checked', false);
+                $('#deleted').attr('checked', false);
             },
             error: function (error) {
                 console.error('Error adding person:', error);

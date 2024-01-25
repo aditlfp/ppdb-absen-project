@@ -26,6 +26,8 @@ class UserRequest extends FormRequest
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
             'role_id' => 'required|exists:roles,id',
+            'create' => 'nullable',
+            'delete' => 'nullable'
         ];
     }
 }

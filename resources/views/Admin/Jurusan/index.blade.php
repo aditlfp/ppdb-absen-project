@@ -22,7 +22,8 @@
          <tbody id="userList">
              <!-- User data will be dynamically added here -->
          </tbody>
-     </table>    
+     </table>
+     <div class="join flex flex-row justify-center items-center m-2" id="pagination"></div>    
 
          <div id="modal" style="display: none">
              <div class="flex justify-end mt-5">
@@ -55,6 +56,22 @@
          })
      })
 
+     function paginate(meta)
+    {
+        var current = meta.current_page
+        var totalPages = meta.last_page;
+        $('#pagination').empty();
+        // <div class="join flex flex-row justify-center items-center m-2" id="pagination"></div>    
+
+
+        for (var i = 1; i <= totalPages; i++) {
+            i != current ? $('#pagination').append(`<button class="join-item btn" onclick="fetchdata(${i})">${i}</button>`) : $('#pagination').append(`<button class="join-item btn" disabled onclick="fetchdata(${i})">${i}</button>`)
+        }
+
+       
+        current != totalPages ? $('#pagination').append(`<button class="join-item btn" onclick="fetchdata(${totalPages})">Last</button>`) : ""
+    }
+
 
      function fetchdata() {
          $('#load').show()
@@ -71,6 +88,7 @@
                  // Clear existing content
                  $('#userList').empty();
                  var no = 1;
+                 paginate(response.meta)
                  // Iterate through the response and append rows to the table
                  if (response.data.length != 0) {
                      response.data.forEach(function(jurus) {

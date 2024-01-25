@@ -7,35 +7,47 @@
  <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
-    <div class="w-full h-full overflow-auto" data-simplebar>
-    <div class="flex flex-row gap-x-2 ml-2 my-2">
-        <div class="flex flex-col">
+
+
+     <div class="absolute bg-amber-500 w-full top-[25%] z-[999]" id="modalE" style="display: block;">
+        <div class="flex flex-col gap-x-2 ml-2 my-2 justify-center items-center py-5">
+        <h1 class="font-semibold text-lg">Data Absensi</h1>
+        <div class="flex flex-col justify-center w-full px-10">
             <label for="jurusan_id" class="text-sm font-semibold">Jurusan :</label>
-            <select id="jurusan_id" name="jurusan_id" class="select select-warning text-xs select-sm w-full max-w-xs">
-                <option value="0" disabled selected>~Pilih Jurusan~</option>	
+            <select id="jurusan_id" name="jurusan_id" class="select select-warning text-xs select-sm w-full">
+                <option value="0" disabled selected>~Pilih Jurusan~</option>    
             </select>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col justify-center w-full px-10">
             <label for="kelas" class="text-sm font-semibold">Kelas :</label>
-             <select id="kelas" name="kelas" class="select select-warning text-xs select-sm w-full max-w-xs">
+             <select id="kelas" name="kelas" class="select select-warning text-xs select-sm w-full">
                 <option value="0" disabled selected>~Pilih Kelas~</option>
                 <option value="X">X</option>
                 <option value="XI">XI</option>
                 <option value="XII">XII</option> <!-- Corrected value for Admin -->
             </select>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col justify-center w-full px-10">
             <label for="abjat" class="text-sm font-semibold">Abjat :</label>
-            <select id="abjat" default-value="0" name="abjat" class="select select-warning text-xs select-sm w-full max-w-xs">
-                <option value="0" disabled selected>~Pilih Abjat~</option>	
+            <select id="abjat" default-value="0" name="abjat" class="select select-warning text-xs select-sm w-full">
+                <option value="0" disabled selected>~Pilih Abjat~</option>  
             </select>
+        </div>
+        <div class="flex flex-col justify-center w-full px-10">
+            <label for="abjat" class="text-sm font-semibold">Bulan Absen :</label>
+            <input type="month" name="bulan" id="bulan" class="input input-bordered input-sm text-xs">
         </div>
         <div class="flex flex-col items-center">
             <div class="mt-4 mr-2">
-                <button class="btn btn-sm" id="clear">Clear Filter</button>
+                <button class="btn btn-sm btn-secondary" id="getdata">View Data</button>
+                <button class="btn btn-sm btn-error" id="clear">Clear Filter</button>
             </div>
         </div>
     </div>
+    </div>
+
+
+    <div class="w-full h-full overflow-auto" data-simplebar>
      <table class="table table-xs table-zebra max-h-[50%]" >
          <thead>
              <tr>
@@ -62,11 +74,13 @@
         fetchJurusan();
         getAbjat();
 
-        $('#jurusan_id, #kelas, #abjat').change(function () {
+        $('#getdata').on('click', function () {
             var jurusanId = $('#jurusan_id').val();
             var kelas = $('#kelas').val();
             var abjat = $('#abjat').val();
-            updateFetch(jurusanId, kelas, abjat); // Refresh data when filters change
+            var bulan = $('#bulan').val();
+            $('#modalE').fadeOut();
+            updateFetch(jurusanId, kelas, abjat, bulan); // Refresh data when filters change
         });
     });
 
@@ -78,12 +92,13 @@
     })
     
 
-    function updateFetch(jurusanId, kelas, abjat) {
+    function updateFetch(jurusanId, kelas, abjat, bulan) {
 
         $('.data-siswa').each(function() {
         var optionJurusanId = $(this).data('jurusanData');
         var optionKelas = $(this).data('kelas');
-        var optionAbjat = $(this).data('abjat') || ''; // Treat undefined as empty string
+        var optionAbjat = $(this).data('abjat') || '';
+        var optionCreated = $(this).data('created') // Treat undefined as empty string
 
         // Check if the option matches the selected values or if the selected value is empty
         var jurusanMatch = jurusanId === '' || jurusanId == optionJurusanId;
@@ -91,9 +106,10 @@
         
         // Explicitly handle undefined case
         var abjatMatch = abjat === undefined ? optionAbjat === '' : String(abjat) == optionAbjat;
+        var createdMatch = bulan == optionCreated;
 
         // Menyembunyikan atau menampilkan data berdasarkan kondisi
-            if (jurusanMatch && kelasMatch && abjatMatch) 
+            if (jurusanMatch && kelasMatch && abjatMatch && createdMatch) 
             {
                 $(this).show();
             } else {
@@ -120,6 +136,9 @@
 
                     if (response.data.length != 0) {
                         response.data.forEach(function (siswa) {
+                            const date = new Date(${siswa.created_at});
+                            const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+
 
                             var tidakMasukHtml = '';
                     
@@ -151,7 +170,8 @@
                                 <tr class="data-siswa" 
                                 data-jurusan-data = '${siswa.jurusan_id}'
 						        data-kelas = '${siswa.kelas}'
-						        data-abjat = '${siswa.abjat}'>
+						        data-abjat = '${siswa.abjat}'
+                                data-created = '${siswa.formattedDate}'>
                                     <td>${no++}</td>
                                     <td>${siswa.kelas}</td>
                                     <td>${siswa.jurusan.name} - ${siswa.abjat}</td>

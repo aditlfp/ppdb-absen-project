@@ -12,7 +12,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $users = User::paginate(1);
+            $users = User::paginate(15);
             return UserResource::collection($users);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

@@ -20,6 +20,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Role</th>
+                    <th>Save Data || Delete Data</th>
                     <th>Created At</th>
                     <th>Action</th>
                 </tr>
@@ -28,7 +29,7 @@
                 <!-- User data will be dynamically added here -->
             </tbody>
         </table>
-         <div class="join flex flex-row justify-center items-center m-2" id="paginationContainer"></div>    
+         <div class="join flex flex-row justify-center items-center m-2" id="pagination"></div>    
          <div id="content-container"></div>
             <div id="modal" style="display: none">
                 <div class="flex justify-end mt-5">
@@ -62,40 +63,20 @@
             })
         })
 
-        function paginate(meta) {
-          const container = $('<div/>').addClass('join shadow-md');
+        function paginate(meta)
+        {
+            var current = meta.current_page
+            var totalPages = meta.last_page;
+            $('#pagination').empty();
+            // <div class="join flex flex-row justify-center items-center m-2" id="pagination"></div>    
 
-          const prev = meta.links[0].url;
-          const next = meta.links[meta.links.length - 1].url;
-          const current = meta.current_page;
-          console.log(prev, next, current)
 
-          if (prev) {
-            const prevLink = $('<a/>')
-              .attr('href', prev)
-              .addClass('join-item btn bg-blue-600 hover:bg-blue-800')
-              .text('«');
+            for (var i = 1; i <= totalPages; i++) {
+                i != current ? $('#pagination').append(`<button class="join-item btn" onclick="fetchdata(${i})">${i}</button>`) : $('#pagination').append(`<button class="join-item btn" disabled onclick="fetchdata(${i})">${i}</button>`)
+            }
 
-            container.append(prevLink);
-          }
-
-          const currentButton = $('<button/>')
-            .addClass('join-item btn bg-blue-600 hover:bg-blue-800')
-            .text(current);
-
-          container.append(currentButton);
-
-          if (next) {
-            const nextLink = $('<a/>')
-              .attr('href', next)
-              .addClass('join-item btn bg-blue-600 hover:bg-blue-800')
-              .text('»');
-
-            container.append(nextLink);
-          }
-
-          // Append the container to your desired element in the DOM
-          $('#paginationContainer').empty().append(container);
+           
+            current != totalPages ? $('#pagination').append(`<button class="join-item btn" onclick="fetchdata(${totalPages})">Last</button>`) : ""
         }
 
 
@@ -108,7 +89,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response){
-                    console.log(response);
                     $('#load').hide()
                     if (response && Array.isArray(response.data)) {
                     // Clear existing content
@@ -135,6 +115,7 @@
                                 <td>${user.name}</td>
                                 <td>${user.email}</td>
                                 <td>${user.role.name}</td>
+                                <td>${user.created} || ${user.deleted}</td>
                                 <td>${ymdString}</td>
                                 <td>
                                     <div class="flex gap-x-3">

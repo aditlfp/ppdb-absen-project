@@ -19,6 +19,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->foreignIdFor(Role::class)->default(3); //1 = guru = 2 = admin 3 = siswa
+            $table->boolean('create')->default(0);
+            $table->boolean('delete')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
