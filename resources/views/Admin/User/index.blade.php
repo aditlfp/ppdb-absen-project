@@ -20,7 +20,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Save Data || Delete Data</th>
+                    <th class="text-center">Save Data - Delete Data</th>
                     <th>Created At</th>
                     <th>Action</th>
                 </tr>
@@ -115,7 +115,7 @@
                                 <td>${user.name}</td>
                                 <td>${user.email}</td>
                                 <td>${user.role.name}</td>
-                                <td>${user.created} || ${user.deleted}</td>
+                                <td class="flex justify-evenly">${user.create == null || user.create == '0' ? '<span class="text-red-500 text-lg"><i class="ri-spam-3-fill"></i></span>' : '<span class="text-lg text-blue-500"><i class="ri-key-fill"></i></span>'} - ${user.delete == null || user.delete == '0' ? '<span class="text-red-500 text-lg"><i class="ri-spam-3-fill"></i></span>' : '<span class="text-lg text-blue-500"><i class="ri-key-fill"></i></span>'}</td>
                                 <td>${ymdString}</td>
                                 <td>
                                     <div class="flex gap-x-3">

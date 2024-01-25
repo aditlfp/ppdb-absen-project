@@ -26,15 +26,24 @@
 			@endif
 				<span class="text-xs italic text-sky-700 mb-5">Creted By <a href="https://github.com/aditlfp" target="_blank">@aditlfp</a></span>
 		</div>
-		<!-- @if(Auth::user()->role_id != 2)
-			<div class="flex w-full"><button onclick="back()" class="btn bg-red-500 w-full">Back</button></div>
-		@endif -->
+		 {{-- @if(Auth::user()->role_id != 2)
+			<div class="flex w-full"><button onclick="back()" class="btn bg-red-500 btn-sm">Back</button></div>
+		@endif  --}}
 	</div>
 
 
 	<script type="text/javascript">
 		var originalContent = $('#content').html();
 
+		$(document).ready(function() {
+			back()
+		})
+		
+		function back()
+		{
+			$('#content').html(originalContent);
+		}
+		
 		function adminPanel()
 		{
 			$.ajax({
@@ -81,12 +90,6 @@
 					$('#content').html(res)
 				}
 			})
-		}
-
-
-		function back()
-		{
-			$('#content').html(originalContent);
 		}
 
 

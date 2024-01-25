@@ -4,7 +4,6 @@
     		<div class="font-semibold text-center text-lg">
     			Absensi Siswa SMK Pemkab Ponorogo
 	    	</div>
-
 		    <div class="flex flex-col m-5">
 		        <label for="jurusan_id" class="text-sm font-semibold required">Jurusan :</label>
 		        <select id="jurusan_id" name="jurusan_id" class="select select-warning text-xs select-sm w-full max-w-xs">
@@ -32,9 +31,14 @@
 		       	
 		       </div>
 		    </div>
-		    <div class="btn bg-sky-500 w-full" onclick="storeData()" id="save_data" style="display: none;">
-    			<button id="btnSave">Save</button>
-    		</div>
+			<div class="flex justify-center gap-x-3 mb-5">
+				<div class="btn bg-sky-500" onclick="storeData()" id="save_data" style="display: none;">
+					<button id="btnSave">Save</button>
+				</div>
+				<div class="btn bg-red-500" onclick="back()">
+					<button id="back">Back</button>
+				</div>
+			</div>
     	</div>
     	    	
     </div>

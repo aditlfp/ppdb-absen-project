@@ -162,9 +162,9 @@
                 $('#kelas').val('');
                 $('#abjat').val('');
             },
-            error: function (error) {
-                console.error('Error adding person:', error);
-            }
+            // error: function (error) {
+            //     console.error('Error adding person:', error);
+            // }
         });
     });
 </script>

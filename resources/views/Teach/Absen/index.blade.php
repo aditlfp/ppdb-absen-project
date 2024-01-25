@@ -8,10 +8,12 @@
 </head>
 <body>
 
-
-     <div class="absolute bg-amber-500 w-full top-[25%] z-[999]" id="modalE" style="display: block;">
+     <div class="absolute bg-amber-500 w-full h-screen z-[999]" id="modalE" style="display: block;">
+        <div class="flex justify-end items-end">
+            <button class="btn btn-circle btn-error btn-sm m-2" onclick="$('#modalE').fadeOut();"><i class="ri-close-fill text-lg"></i></button>
+        </div>
         <div class="flex flex-col gap-x-2 ml-2 my-2 justify-center items-center py-5">
-        <h1 class="font-semibold text-lg">Data Absensi</h1>
+            <h1 class="font-semibold text-lg">Data Absensi</h1>
         <div class="flex flex-col justify-center w-full px-10">
             <label for="jurusan_id" class="text-sm font-semibold">Jurusan :</label>
             <select id="jurusan_id" name="jurusan_id" class="select select-warning text-xs select-sm w-full">
@@ -48,6 +50,9 @@
 
 
     <div class="w-full h-full overflow-auto" data-simplebar>
+        <div class="flex justify-end mr-2 my-2">
+            <button onclick=" $('#modalE').fadeIn();" class="btn btn-accent"><i class="ri-equalizer-line text-xl text-white font-normal"></i></button>
+        </div>
      <table class="table table-xs table-zebra max-h-[50%]" >
          <thead>
              <tr>
@@ -94,6 +99,15 @@
 
     function updateFetch(jurusanId, kelas, abjat, bulan) {
 
+        if (fetchdata === null || fetchdata.length === 0) {
+        // If data is null or empty, display a message
+        $('#userList').empty().append(`
+            <tr class="text-center">
+                <td colspan="5"><span>~ Data Tidak Tersedia ~</span></td>
+            </tr>
+        `);
+        return;
+        }
         $('.data-siswa').each(function() {
         var optionJurusanId = $(this).data('jurusanData');
         var optionKelas = $(this).data('kelas');
@@ -106,7 +120,7 @@
         
         // Explicitly handle undefined case
         var abjatMatch = abjat === undefined ? optionAbjat === '' : String(abjat) == optionAbjat;
-        var createdMatch = bulan == optionCreated;
+        var createdMatch = bulan === '' || bulan == optionCreated;
 
         // Menyembunyikan atau menampilkan data berdasarkan kondisi
             if (jurusanMatch && kelasMatch && abjatMatch && createdMatch) 
@@ -136,7 +150,7 @@
 
                     if (response.data.length != 0) {
                         response.data.forEach(function (siswa) {
-                            const date = new Date(${siswa.created_at});
+                            const date = new Date(siswa.created_at);
                             const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
 
 
@@ -171,7 +185,7 @@
                                 data-jurusan-data = '${siswa.jurusan_id}'
 						        data-kelas = '${siswa.kelas}'
 						        data-abjat = '${siswa.abjat}'
-                                data-created = '${siswa.formattedDate}'>
+                                data-created = '${formattedDate}'>
                                     <td>${no++}</td>
                                     <td>${siswa.kelas}</td>
                                     <td>${siswa.jurusan.name} - ${siswa.abjat}</td>

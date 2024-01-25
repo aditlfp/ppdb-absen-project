@@ -66,7 +66,7 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            data: { name, email, role_id, password, password_confirmation, created, delete: deleted },
+            data: { name, email, role_id, password, password_confirmation, create, delete: deleted },
             success: function () {
                 // After creating a new user, fetch updated data
                 fetchdata();

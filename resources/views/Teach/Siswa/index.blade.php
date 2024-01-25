@@ -8,9 +8,10 @@
  <title>Document</title>
 </head>
 <body>
-    <div class="w-full h-full overflow-auto" data-simplebar>
-     <div class="flex justify-end items-end w-full my-5 mr-5">
-         <button id="btnCreate" class="btn bg-amber-500  transition-all ease-in-out duration-150 w-fit">Create New</button>
+    <div id="mainContent" class="w-full h-full">
+     <div class="flex justify-end items-end my-5 mr-3 gap-x-2">
+         <button id="btnCreate" onclick="create()" class="btn bg-amber-500  transition-all ease-in-out duration-150 w-fit">Create New</button>
+         <button id="btnBack" onclick="back()" class="btn bg-red-500  transition-all ease-in-out duration-150 w-fit">Back</button>
      </div>
      <table class="table table-xs table-zebra max-h-[50%]" data-simplebar>
          <thead>
@@ -30,9 +31,6 @@
      </table>    
 
          <div id="modal" style="display: none">
-             <div class="flex justify-end mt-5">
-                 <button class="btn bg-red-500 mx-5" id="close">Close</button>
-             </div>
              <div id="modalBody">
 
              </div>
@@ -42,20 +40,26 @@
          <span id="load" class="loading loading-infinity loading-lg" style="display: none;"></span>
      </div>
  </div>
- <x-paginate />
  <script>
+    var mainContent = $('#mainContent').html();
      $(document).ready(function(){
          fetchdata()
-
-
          $('#close').on('click', function() {
                  $('#btnCreate').show()
                  $('#modal').hide()
          })
      })
 
+     function backTo()
+     {
+        $('#mainContent').html(mainContent);
+        fetchdata()
+     }
+
      function fetchdata() {
          $('#load').show()
+         var created = {!! Auth::user()->create !!};
+         var deleted = {!! Auth::user()->delete !!}
          $.ajax({
              url: '/api/teacher/ppdb-siswa',
              type: 'GET',
@@ -81,8 +85,8 @@
                                  <td>${siswa.no_tlp_ortu}</td>
                                  <td>
                                      <div class="flex gap-x-3">
-                                         <button onclick="editUser(${siswa.id})" class="btn btn-xs bg-amber-500"><i class="ri-pencil-fill"></i></button>
-                                         <button onclick="deleteUser(${siswa.id})" class="btn btn-xs bg-red-500"><i class="ri-close-line"></i></button>     
+                                        ${created == 1 ? `<button onclick="editUser(${siswa.id})" class="btn btn-xs bg-amber-500"><i class="ri-pencil-fill"></i></button>` : ""}
+                                        ${deleted == 1 ? `<button onclick="deleteUser(${siswa.id})" class="btn btn-xs bg-red-500"><i class="ri-close-line"></i></button>` : ""}
                                      </div>
                                  </td>
                              </tr>
@@ -105,17 +109,18 @@
      });
  }
 
-     $('#btnCreate').on('click', function() {
-         $.ajax({
+        function create()
+        {
+            $.ajax({
              url: 'teacher/siswa-new/create',
              type: 'GET',
              success: function(response){
-                 $('#modalBody').html(response + '<div class="flex justify-center"><button id="btnSave" type="button" class="btn bg-sky-500 w-full">Save</button></div>')
+                 $('#modalBody').html(response + '<div class="flex justify-center gap-x-3 m-2"><button id="btnSave" type="button" class="btn bg-sky-500">Save</button><button onclick="backTo()" type="button" class="btn bg-red-500">Back</button></div>')
                  $('#btnCreate').hide()
                  $('#modal').show()
              }
          })
-     });
+        }
 
      function deleteUser(userId)
      {
@@ -151,7 +156,7 @@
                          $(document).ready(function() {
                              getData(response)
                          })
-                         $('#modalBody').html(res + '<div class="flex justify-center"><button id="btnSave2" type="button" class="btn bg-sky-500 w-full">Save</button></div>')
+                         $('#modalBody').html(res + '<div class="flex justify-center gap-x-3 m-2"><button id="btnSave2" type="button" class="btn bg-sky-500">Save</button><button onclick="backTo()" type="button" class="btn bg-red-500">Back</button></div>')
                          $('#modal').show()
                      }
                 })

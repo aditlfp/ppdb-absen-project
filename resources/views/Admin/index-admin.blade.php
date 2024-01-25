@@ -144,7 +144,7 @@
                 success: function() {
                     toastr.info('Success Logout');
                     setTimeout(function() {
-                        window.location.href('login');
+                        window.location.href = '/login';
                     }, 2000);
                 }
             })
