@@ -8,7 +8,7 @@
 </head>
 <body>
 
-     <div class="absolute bg-amber-500 w-full h-screen z-[999]" id="modalE" style="display: block;">
+     <div class="fixed top-0 bg-amber-500 w-full h-screen z-[9992]" id="modalE" style="display: block;"> <!-- Modal Filter Data -->
         <div class="flex justify-end items-end">
             <button class="btn btn-circle btn-error btn-sm m-2" onclick="$('#modalE').fadeOut();"><i class="ri-close-fill text-lg"></i></button>
         </div>
@@ -50,8 +50,9 @@
 
 
     <div class="w-full h-full overflow-auto" data-simplebar>
-        <div class="flex justify-end mr-2 my-2">
+        <div class="flex justify-end mr-2 my-2 gap-x-2">
             <button onclick=" $('#modalE').fadeIn();" class="btn btn-accent"><i class="ri-equalizer-line text-xl text-white font-normal"></i></button>
+             <button id="btnBack" onclick="back()" class="btn bg-red-500  transition-all ease-in-out duration-150 w-fit">Home</button>
         </div>
      <table class="table table-xs table-zebra max-h-[50%]" >
          <thead>
@@ -98,39 +99,37 @@
     
 
     function updateFetch(jurusanId, kelas, abjat, bulan) {
+    var noDataFound = true; // Flag to check if any matching data is found
 
-        if (fetchdata === null || fetchdata.length === 0) {
-        // If data is null or empty, display a message
-        $('#userList').empty().append(`
+    $('.data-siswa').each(function () {
+        var optionJurusanId = $(this).data('jurusanData');
+        var optionKelas = $(this).data('kelas');
+        var optionAbjat = $(this).data('abjat') || '';
+        var optionCreated = $(this).data('created');
+
+        var jurusanMatch = jurusanId === '' || jurusanId == optionJurusanId;
+        var kelasMatch = kelas === '' || kelas == optionKelas;
+        var abjatMatch = abjat === undefined ? optionAbjat === '' : String(abjat) == optionAbjat;
+        var createdMatch = bulan === '' || bulan == optionCreated;
+
+        if (jurusanMatch && kelasMatch && abjatMatch && createdMatch) {
+            $(this).show();
+            noDataFound = false; // Matching data found
+        } else {
+            $(this).hide();
+        }
+    });
+
+    // Display message if no matching data is found
+    if (noDataFound) {
+        $('#userList').append(`
             <tr class="text-center">
                 <td colspan="5"><span>~ Data Tidak Tersedia ~</span></td>
             </tr>
         `);
-        return;
-        }
-        $('.data-siswa').each(function() {
-        var optionJurusanId = $(this).data('jurusanData');
-        var optionKelas = $(this).data('kelas');
-        var optionAbjat = $(this).data('abjat') || '';
-        var optionCreated = $(this).data('created') // Treat undefined as empty string
-
-        // Check if the option matches the selected values or if the selected value is empty
-        var jurusanMatch = jurusanId === '' || jurusanId == optionJurusanId;
-        var kelasMatch = kelas === '' || kelas == optionKelas;
-        
-        // Explicitly handle undefined case
-        var abjatMatch = abjat === undefined ? optionAbjat === '' : String(abjat) == optionAbjat;
-        var createdMatch = bulan === '' || bulan == optionCreated;
-
-        // Menyembunyikan atau menampilkan data berdasarkan kondisi
-            if (jurusanMatch && kelasMatch && abjatMatch && createdMatch) 
-            {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
     }
+}
+
 
     function fetchdata() {
         $('#load').show();
@@ -145,7 +144,7 @@
                 $('#load').hide();
 
                 if (response && Array.isArray(response.data)) {
-                    $('#userList').empty();
+                    $('#userList').empty()
                     var no = 1;
 
                     if (response.data.length != 0) {

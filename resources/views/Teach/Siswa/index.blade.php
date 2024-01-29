@@ -8,12 +8,12 @@
  <title>Document</title>
 </head>
 <body>
-    <div id="mainContent" class="w-full h-full">
+    <div id="mainContent" class="w-full">
      <div class="flex justify-end items-end my-5 mr-3 gap-x-2">
          <button id="btnCreate" onclick="create()" class="btn bg-amber-500  transition-all ease-in-out duration-150 w-fit">Create New</button>
-         <button id="btnBack" onclick="back()" class="btn bg-red-500  transition-all ease-in-out duration-150 w-fit">Back</button>
+         <button id="btnBack" onclick="back()" class="btn bg-red-500  transition-all ease-in-out duration-150 w-fit">Home</button>
      </div>
-     <table class="table table-xs table-zebra max-h-[50%]" data-simplebar>
+     <table id="dataSiswa" class="table table-xs table-zebra max-h-[50%]" data-simplebar>
          <thead>
              <tr>
                  <th>#</th>
@@ -30,7 +30,7 @@
          </tbody>
      </table>    
 
-         <div id="modal" style="display: none">
+         <div id="modal" style="display: none" class="w-full h-full">
              <div id="modalBody">
 
              </div>
@@ -47,6 +47,7 @@
          $('#close').on('click', function() {
                  $('#btnCreate').show()
                  $('#modal').hide()
+                 $('#dataSiswa').show();
          })
      })
 
@@ -72,6 +73,7 @@
                  // Clear existing content
                  $('#userList').empty();
                  var no = 1;
+                 var auth = {{ Auth::user()->role_id}}
                  // Iterate through the response and append rows to the table
                  if (response.data.length != 0) {
                      response.data.forEach(function(siswa) {
@@ -85,8 +87,8 @@
                                  <td>${siswa.no_tlp_ortu}</td>
                                  <td>
                                      <div class="flex gap-x-3">
-                                        ${created == 1 ? `<button onclick="editUser(${siswa.id})" class="btn btn-xs bg-amber-500"><i class="ri-pencil-fill"></i></button>` : ""}
-                                        ${deleted == 1 ? `<button onclick="deleteUser(${siswa.id})" class="btn btn-xs bg-red-500"><i class="ri-close-line"></i></button>` : ""}
+                                        ${auth == 2 ? `<button onclick="editUser(${siswa.id})" class="btn btn-xs bg-amber-500"><i class="ri-pencil-fill"></i></button>` : ""}
+                                        ${auth == 2 ? `<button onclick="deleteUser(${siswa.id})" class="btn btn-xs bg-red-500"><i class="ri-close-line"></i></button>` : ""}
                                      </div>
                                  </td>
                              </tr>
@@ -118,6 +120,7 @@
                  $('#modalBody').html(response + '<div class="flex justify-center gap-x-3 m-2"><button id="btnSave" type="button" class="btn bg-sky-500">Save</button><button onclick="backTo()" type="button" class="btn bg-red-500">Back</button></div>')
                  $('#btnCreate').hide()
                  $('#modal').show()
+                 $('#dataSiswa').hide()
              }
          })
         }

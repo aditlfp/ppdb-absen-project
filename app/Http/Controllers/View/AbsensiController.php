@@ -11,4 +11,9 @@ class AbsensiController extends Controller
     {
         return view('Admin.Absen.index');
     }
+
+    public function indexSiswa()
+    {
+    	return view('Siswa.DataAbsen.index');
+    }
 }

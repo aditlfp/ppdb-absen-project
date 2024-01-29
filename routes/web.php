@@ -56,6 +56,12 @@ Route::middleware(['auth', 'teach'])->prefix('api/teacher')->group(function() {
 
 });
 
+Route::middleware(['auth'])->prefix('api/siswa')->group(function() {
+    Route::apiResource('/data-siswa-absen', AbsenController::class)->only(['index', 'show']);
+    Route::apiResource('/siswa-jurusan', JurusanController::class);
+});
+
+
 
 // End Route API
 
@@ -65,6 +71,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// indexSiswa
 // Route View Only
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
@@ -73,11 +80,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::resource('jurusan-data', ViewJurusanController::class);
     Route::resource('absen-data', ViewAbsenController::class);
     Route::view('admin-panel', 'Admin.index-admin')->name('admin-panel');
+    Route::get('absen-export/{jurusan_id}/{kelas}/{abjat}', [AbsenController::class, 'expdfAbsen'])->name('absen.pdf');
+    Route::get('absensi-export-to-excel/{jurusan_id}/{kelas}/{abjat}', [AbsenController::class, 'exportToExcel']);
+    Route::get('siswa-export/{jurusan_id}/{kelas}/{abjat}', [SiswaController::class, 'expdf'])->name('siswa.pdf');
+    Route::get('export-to-excel/{jurusan_id}/{kelas}/{abjat}', [SiswaController::class, 'exportToExcel']);
 });
 
 Route::middleware(['auth', 'teach'])->prefix('teacher')->group(function() {
     Route::resource('siswa-new', SiswaTeachController::class);
     Route::view('absensi-siswa', 'Teach.Absen.index');
+});
+
+Route::middleware(['auth'])->prefix('siswa')->group(function() {
+   Route::get('/siswa-absensi', [ViewAbsenController::class, 'indexSiswa'])->name('siswa_absensi');
 });
 
 // End Route

@@ -8,33 +8,9 @@
 </head>
 <body>
     <div class="w-full h-full overflow-auto" data-simplebar>
-    <div class="flex flex-row justify-end gap-x-3 ml-2 my-2 items-center">
-        <div class="flex flex-col">
-            <label for="jurusan_id" class="text-sm font-semibold">Jurusan :</label>
-            <select id="jurusan_id" name="jurusan_id" class="select select-warning w-full max-w-xs">
-                <option value="0" disabled selected>~Pilih Jurusan~</option>	
-            </select>
-        </div>
-        <div class="flex flex-col">
-            <label for="kelas" class="text-sm font-semibold">Kelas :</label>
-             <select id="kelas" name="kelas" class="select select-warning w-full max-w-xs">
-                <option value="0" disabled selected>~Pilih Kelas~</option>
-                <option value="X">X</option>
-                <option value="XI">XI</option>
-                <option value="XII">XII</option> <!-- Corrected value for Admin -->
-            </select>
-        </div>
-        <div class="flex flex-col">
-            <label for="abjat" class="text-sm font-semibold">Abjat :</label>
-            <select id="abjat" default-value="0" name="abjat" class="select select-warning w-full max-w-xs">
-                <option value="0" disabled selected>~Pilih Abjat~</option>	
-            </select>
-        </div>
-        <div class="flex flex-col">
-            <div class="mt-5 mr-2">
-                <button class="btn max-w-xs" id="clear">Clear Filter</button>
-            </div>
-        </div>
+    <div class="flex flex-row justify-end gap-x-3 mr-16 my-2 items-center">
+		<x-filter-component />
+   		<x-dropdown-download />
     </div>
      <table class="table table-xs table-zebra max-h-[50%]" >
          <thead>
@@ -60,8 +36,6 @@
    $(document).ready(function () {
         // Initial fetch without filters
         fetchdata();
-        fetchJurusan();
-        getAbjat();
 
         $('#jurusan_id, #kelas, #abjat').change(function () {
             var jurusanId = $('#jurusan_id').val();
@@ -71,13 +45,62 @@
         });
     });
 
-    $('#clear').on('click', function() {
-        $('#jurusan_id').val(0);
-        $('#kelas').val(0);
-        $('#abjat').val(0);
-        fetchdata();
-    })
+   	$('#pdf').on('click', function () {
+    const jurusanId = $('#jurusan_id').val();
+    const kelas = $('#kelas').val();
+    const abjat = $('#abjat').val();
+    // console.log(jurusanId, kelas, abjat);
+    if (jurusanId === null || kelas === null || abjat === null) {
+        toastr.error('Filter Export Must Be Insert!', 'Error')
+    } else {
+    var url = `absen-export/${jurusanId}/${kelas}/${abjat}`;
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            success: function (res) {
+                // Assuming the response contains a link to the generated PDF
+                toastr.info('Data Absen Will Download!', 'Info')
+                fetchdata()
+                
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            },
+        });
+    }
+    });
     
+    $('#csv').on('click', function() {
+    const jurusanId = $('#jurusan_id').val();
+    const kelas = $('#kelas').val();
+    const abjat = $('#abjat').val();
+    if (jurusanId === null || kelas === null || abjat === null) {
+        toastr.error('Filter Export Must Be Insert!', 'Error')
+    } else {
+        var urls = `absensi-export-to-excel/${jurusanId}/${kelas}/${abjat}`
+        $.ajax({
+            url: urls,
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            success: function (res) {
+                // console.log(res)
+                // Assuming the response contains a link to the generated PDF
+                window.location.href = urls;
+                toastr.info('Data Absen Will Download!', 'Info')
+                
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            },
+        })
+    }
+   })
 
     function updateFetch(jurusanId, kelas, abjat) {
 
@@ -193,44 +216,5 @@
             }
         });
     }
-
-    function fetchJurusan()
-    	{
-    		$.ajax({
-    			url: '{{ route("jurusan.index") }}',
-    			method: 'GET',
-    			success: function(res)
-    			{
-    				// console.log(res.data[0])
-				    // Dapatkan elemen select berdasarkan ID
-				    var selectElement = $('#jurusan_id');
-
-				    // Loop melalui data dan tambahkan opsi ke elemen select
-				    $.each(res.data, function (index, item) {
-				      selectElement.append($('<option>', {
-				        value: item.id,
-				        text: item.name
-				      }));
-				    });
-    			}
-    		})
-    	}
-
-    	function getAbjat()
-    	{
-    		var selectElement = $('#abjat');
-
-		    // Loop dari huruf A sampai Z
-		    for (var i = 65; i <= 90; i++) {
-		      // Konversi nilai ASCII menjadi karakter huruf
-		      var letter = String.fromCharCode(i);
-
-		      // Tambahkan opsi ke dalam elemen select
-		      selectElement.append($('<option>', {
-		        value: letter,
-		        text: letter
-		      }));
-		    }
-    	}
 
  </script>

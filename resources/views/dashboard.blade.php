@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="shadow-sm flex flex-col justify-content-center items-center w-full bg-slate-200">
+    <div class="shadow-sm flex flex-col rounded-md justify-content-center items-center w-full bg-slate-200">
     	<div class="mt-20 mx-2">
     		<div class="font-semibold text-center text-lg">
     			Absensi Siswa SMK Pemkab Ponorogo

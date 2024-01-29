@@ -27,7 +27,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::middleware(['auth'])->prefix('siswa')->group(function() {
-    Route::apiResource('/data-absen', AbsenController::class)->only(['index', 'show']);
-});
 

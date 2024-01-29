@@ -14,14 +14,72 @@ use League\Csv\Writer;
 use League\Csv\CannotInsertRecord;
 use League\Csv\CannotRetrieveEmptyField;
 use League\Csv\CannotRetrieveFieldValue;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SiswaExport;
 
 class SiswaController extends Controller
 {
-    // Method untuk menampilkan semua data siswa
-    public function index()
+ 
+
+ public function exportToExcel(Request $request)
+{
+    $jurusan_id = $request->jurusan_id;
+    $kelas = $request->kelas;
+    $abjat = $request->abjat;
+
+    $siswa = Siswa::where('jurusan_id', $jurusan_id)
+        ->where('kelas', $kelas)
+        ->where('abjat', $abjat)
+        ->get();
+
+    return Excel::download(new SiswaExport($siswa), 'siswa.xlsx');
+}
+
+public function expdf(Request $request)
+{   
+
+        $jurusan_id = $request->jurusan_id;
+        $kelas = $request->kelas;
+        $abjat = $request->abjat;
+
+        $siswa = Siswa::where('jurusan_id', $jurusan_id)
+            ->where('kelas', $kelas)
+            ->where('abjat', $abjat)
+            ->get();
+        
+        $options = new Options();
+        $options->setIsHtml5ParserEnabled(true);
+        $options->set('isRemoteEnabled', true);
+        $options->set('defaultFont', 'Arial');
+
+        $pdf = new Dompdf($options);
+        $html = view('Admin.Siswa.pdf', compact('siswa'))->render();
+        $pdf->loadHtml($html);
+
+        $pdf->setPaper('A4', 'landscape');
+        $pdf->render();
+
+        $output = $pdf->output();
+        $filename = 'siswa.pdf';
+
+        if ($request->input('action') == 'download') {
+            return response()->download($output, $filename);
+        }
+
+        return response($output, 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="'.$filename.'"');
+
+}
+
+
+public function index()
 {
     try {
-        $siswa = Siswa::paginate(50);
+        $siswa = Siswa::paginate(25);
         return SiswaResource::collection($siswa);
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
@@ -120,3 +178,4 @@ public function update(SiswaRequest $request, $id)
         }
     }
 }
+

@@ -13,23 +13,26 @@
         <div class="flex justify-end items-end w-full my-5">
             <button id="btnCreate" class="btn bg-amber-500  transition-all ease-in-out duration-150 w-fit">Create New</button>
         </div>
-        <table class="table table-xs table-zebra max-h-[50%]">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th class="text-center">Save Data - Delete Data</th>
-                    <th>Created At</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="userList">
-                <!-- User data will be dynamically added here -->
-            </tbody>
-        </table>
-         <div class="join flex flex-row justify-center items-center m-2" id="pagination"></div>    
+
+        <section id="dataUser">
+            <table class="table table-xs table-zebra max-h-[50%]">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th class="text-center">Save Data - Delete Data</th>
+                        <th>Created At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="userList">
+                    <!-- User data will be dynamically added here -->
+                </tbody>
+            </table>
+             <div class="join flex flex-row justify-center items-center m-2" id="pagination"></div>
+         </section>    
          <div id="content-container"></div>
             <div id="modal" style="display: none">
                 <div class="flex justify-end mt-5">
@@ -58,6 +61,7 @@
                 success: function(response){
                     $('#btnCreate').show()
                     $('#modal').hide()
+                    $('#dataUser').show()
                 }
                 })
             })
@@ -144,6 +148,7 @@
                     $('#modalBody').html(response + '<div class="flex justify-center"><button id="btnSave" type="button" class="btn bg-sky-500 w-full">Save</button></div>')
                     $('#btnCreate').hide()
                     $('#modal').show()
+                    $('#dataUser').hide()
                 }
             })
         });
@@ -184,6 +189,7 @@
                             })
                             $('#modalBody').html(res + '<div class="flex justify-center"><button id="btnSave2" type="button" class="btn bg-sky-500 w-full">Save</button></div>')
                             $('#modal').show()
+                            $('#dataUser').hide()
                         }
                    })
                 }

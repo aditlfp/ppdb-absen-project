@@ -7,6 +7,27 @@
         <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Masukkan Nama Lengkap" class="input input-bordered input-sm input-warning w-full max-w-xs" />
     </div>
     <div class="flex flex-col m-5">
+    <label for="jurusan_id" class="text-sm font-semibold required">Jurusan :</label>
+        <select id="jurusan_id" name="jurusan_id" class="select select-warning text-xs select-sm w-full max-w-xs">
+            <option value="0" disabled selected>~Pilih Jurusan~</option>    
+        </select>
+    </div>
+    <div class="flex flex-col m-5">
+        <label for="kelas" class="text-sm font-semibold required">Kelas :</label>
+         <select id="kelas" name="kelas" class="select select-warning text-xs select-sm w-full max-w-xs">
+            <option value="0" disabled selected>~Pilih Kelas~</option>
+            <option value="X">X</option>
+            <option value="XI">XI</option>
+            <option value="XII">XII</option> <!-- Corrected value for Admin -->
+        </select>
+    </div>
+    <div class="flex flex-col m-5">
+        <label for="abjat" class="text-sm font-semibold required">Abjat :</label>
+        <select id="abjat" name="abjat" class="select select-warning text-xs select-sm w-full max-w-xs">
+            <option value="0" disabled selected>~Pilih Abjat~</option>  
+        </select>
+    </div>
+    <div class="flex flex-col m-5">
         <label for="no_tlp" class="text-sm font-semibold required">No. Tlp :</label>
         <input type="text" id="no_tlp" name="no_tlp" placeholder="0812223333" class="input input-bordered input-sm input-warning w-full max-w-xs" />
     </div>
@@ -47,6 +68,48 @@
 </div>
 
 <script>
+
+    fetchJurusan();
+    getAbjat();
+
+    function fetchJurusan()
+    {
+        $.ajax({
+            url: '{{ route("data-jurusan.index") }}',
+            method: 'GET',
+            success: function(res)
+            {
+                // Dapatkan elemen select berdasarkan ID
+                var selectElement = $('#jurusan_id');
+
+                // Loop melalui data dan tambahkan opsi ke elemen select
+                $.each(res.data, function (index, item) {
+                  selectElement.append($('<option>', {
+                    value: item.id,
+                    text: item.name
+                  }));
+                });
+            }
+        })
+    }
+
+    function getAbjat()
+    {
+        var selectElement = $('#abjat');
+
+        // Loop dari huruf A sampai Z
+        for (var i = 65; i <= 90; i++) {
+          // Konversi nilai ASCII menjadi karakter huruf
+          var letter = String.fromCharCode(i);
+
+          // Tambahkan opsi ke dalam elemen select
+          selectElement.append($('<option>', {
+            value: letter,
+            text: letter
+          }));
+        }
+    }
+
     $('#load').show()
         function getData(response) {
         // Populate form fields with user data
@@ -61,6 +124,9 @@
         $('#kota').val(response.data.kota);
         $('#nama_ortu').val(response.data.nama_ortu);
         $('#no_tlp_ortu').val(response.data.no_tlp_ortu);
+        $('#jurusan_id').val(response.data.jurusan_id);
+        $('#kelas').val(response.data.kelas);
+        $('#abjat').val(response.data.abjat);
 
         // Hide the loading indicator
         $('#load').hide();
@@ -78,6 +144,9 @@
             const kota = $('#kota').val();
             const nama_ortu = $('#nama_ortu').val();
             const no_tlp_ortu = $('#no_tlp_ortu').val();
+            const jurusan_id = $('#jurusan_id').val();
+            const kelas = $('#kelas').val();
+            const abjat = $('#abjat').val();
 
             // Make an AJAX request to update user data
             $.ajax({
@@ -95,18 +164,29 @@
                     kecamatan,
                     kota,
                     nama_ortu,
-                    no_tlp_ortu },
+                    no_tlp_ortu,
+                    jurusan_id,
+                    abjat,
+                    kelas },
                 success: function () {
                     // After updating user data, fetch updated data
                     fetchdata();
                     toastr.success('Data Has Been Updated!', 'success');
 
                     // Reset form fields
-                    $('#name').val('');
-                    $('#email').val('');
-                    $('#role_id').val('0');
-                    $('#password').val('');
-                    $('#password_confirmation').val('');
+                    $('#nama_lengkap').val('');
+                    $('#no_tlp').val('');
+                    $('#desa').val('');
+                    $('#rt').val('');
+                    $('#rw').val('');
+                    $('#kelurahan').val('');
+                    $('#kecamatan').val('');
+                    $('#kota').val('');
+                    $('#nama_ortu').val('');
+                    $('#no_tlp_ortu').val('');
+                    $('#jurusan_id').val('');
+                    $('#kelas').val('');
+                    $('#abjat').val('');
                 },
                 error: function (error) {
                     console.error('Error updating user data:', error);
